@@ -4,6 +4,7 @@ from html import escape
 from importlib.resources import files
 
 from ..statistics import StatisticsReport, WorkflowStatistics
+from .measurements import render_measurements
 
 
 def number(value: int | None) -> str:
@@ -113,6 +114,7 @@ def render_dashboard(report: StatisticsReport) -> str:
 <div class="period"><strong>Last {report.days} UTC calendar days</strong><br>
 <span class="muted">Generated {escape(report.generated_at)}</span><br><span class="badge">Retained local runs only</span></div></div>
 <section class="cards" aria-label="Key metrics">{card_html}</section>
+{render_measurements(report.measurements)}
 <section class="panel coverage"><div><h2>How much of this is modeled?</h2>
 <p>{report.modeled_runs:,} of {report.terminal:,} terminal executions have a baseline. Unknown savings are left uncounted.</p></div>
 <div class="coverage-meter"><strong>{coverage:.0f}%</strong><progress value="{report.modeled_runs}" max="{max(1, report.terminal)}" aria-label="Baseline coverage">{coverage:.0f}%</progress></div></section>
@@ -123,7 +125,7 @@ def render_dashboard(report: StatisticsReport) -> str:
 <p>Manual equivalent <strong>{manual}</strong> − Owlmatic attempts <strong>{automated}</strong> − setup <strong>{setup}</strong> tokens.</p>
 <p>Only verified tasks earn manual-equivalent credit. Every terminal attempt with a baseline incurs its configured Owlmatic cost.
 Negative savings remain negative. A valid failed check counts as a verified negative finding; an execution error does not.</p></div>
-<div><h3>What these numbers do not claim</h3><ul><li>Provider tokens and dollar savings are not measured.</li>
+<div><h3>What these configured baselines do not claim</h3><ul><li>Legacy baseline estimates are not provider measurements; imported provider usage appears separately above.</li>
 <li>Each baseline must include discovery, prompts, reasoning, retries, and inspected logs.</li>
 <li>Full setup cost is charged once per modeled workflow version in this window. Do not add overlapping windows.</li>
 <li>{report.excluded_validation_runs:,} validation runs and {report.excluded_legacy_runs:,} legacy runs with unknown purpose are excluded.</li>

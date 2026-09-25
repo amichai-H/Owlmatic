@@ -14,6 +14,7 @@ from .errors import OwlError
 from .export_cli import dispatch as export_dispatch
 from .export_state import DeliveryReport
 from .failures import public_failure
+from .measurement_cli import dispatch as measurement_dispatch
 from .messages import ValidationReport
 from .serialization import encode, json_object
 from .statistics import SavingsBaseline, StatisticsRequest
@@ -21,6 +22,8 @@ from .statistics import SavingsBaseline, StatisticsRequest
 
 def dispatch(app: Application, args: argparse.Namespace) -> BaseModel:
     match args.command:
+        case "measure":
+            return measurement_dispatch(app.measurements, args)
         case "export":
             return export_dispatch(app.exports, args)
         case "find":
@@ -79,7 +82,9 @@ def dispatch(app: Application, args: argparse.Namespace) -> BaseModel:
             return app.catalog.list()
         case "capture":
             return app.authoring.capture(
-                args.name, Path(args.output).expanduser().absolute() if args.output else None
+                args.name,
+                Path(args.output).expanduser().absolute() if args.output else None,
+                args.source_task,
             )
         case "validate":
             return app.authoring.validate(
@@ -129,8 +134,20 @@ def main() -> None:
 
             create_server().run(transport="stdio")
             return
-        result = dispatch(create_application(), args)
-        print(encode(result) if args.json else result.model_dump_json(indent=2, exclude_none=True))
+        app = create_application()
+        if args.command == "measure" and args.action == "watch":
+            for report in app.measurements.watch(args.once):
+                print(encode(report), flush=True)
+            return
+        if args.command == "measure" and args.action == "prepare-tokenizer":
+            print(encode(app.prepare_tokenizer()))
+            return
+        result = dispatch(app, args)
+        rendered = encode(result) if args.json else result.model_dump_json(indent=2, exclude_none=True)
+        print(rendered)
+        app.record_response(
+            args.command, rendered, result.run.run_id if isinstance(result, RunSummary) else None
+        )
         if isinstance(result, ValidationReport) and not result.valid:
             raise SystemExit(1)
         if isinstance(result, DeliveryReport) and result.status in {"failed", "deferred"}:
@@ -140,6 +157,8 @@ def main() -> None:
                 raise SystemExit(1)
             if result.run.state in {"error", "cancelled", "blocked"}:
                 raise SystemExit(2)
+    except KeyboardInterrupt:
+        raise SystemExit(130) from None
     except Exception as error:
         print(encode(public_failure(error)))
         raise SystemExit(2) from None

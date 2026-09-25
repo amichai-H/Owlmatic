@@ -1,10 +1,11 @@
 """Conservative savings model over retained invocations, independent of transports."""
 
 from collections import defaultdict
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 
+from .measurement.contracts import MeasurementReport
 from .ports import Clock, WorkflowRepository
 from .statistics import (
     DailyStatistics,
@@ -63,6 +64,7 @@ class StatisticsService:
     repository: StatisticsRepository
     workflows: WorkflowRepository
     clock: Clock
+    measurements: Callable[[], MeasurementReport] | None = None
 
     def baseline(self, baseline: SavingsBaseline) -> SavingsBaseline:
         self.workflows.get(baseline.ref)  # Only exact, registered versions have baselines.
@@ -104,6 +106,7 @@ class StatisticsService:
                 )
             )
         return StatisticsReport(
+            measurements=self.measurements() if self.measurements else None,
             generated_at=now.isoformat(),
             since=start.isoformat(),
             days=request.days,

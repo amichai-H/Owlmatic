@@ -6,6 +6,7 @@ from typing import Annotated, Literal, Self
 from pydantic import Field, model_validator
 
 from .domain import Contract
+from .measurement_wire import MeasurementMetrics
 
 Identifier = Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")]
 Count = Annotated[int, Field(ge=0)]
@@ -49,8 +50,7 @@ class WorkflowMetrics(Contract):
     savings: SavingsMetrics | None = None
 
 
-class StatisticsSnapshot(Contract):
-    schema_version: Literal["1"] = "1"
+class SnapshotBody(Contract):
     kind: Literal["owlmatic.statistics.snapshot"] = "owlmatic.statistics.snapshot"
     snapshot_id: Identifier
     source_id: Identifier
@@ -79,3 +79,29 @@ class StatisticsSnapshot(Contract):
             if any(row.savings is not None for row in self.workflows or ()):
                 raise ValueError("Workflow savings require savings consent")
         return self
+
+
+class StatisticsSnapshot(SnapshotBody):
+    schema_version: Literal["1"] = "1"
+
+
+class StatisticsSnapshotV2(SnapshotBody):
+    schema_version: Literal["2"] = "2"
+    source_label: str | None = Field(default=None, max_length=100)
+    measurements_shared: bool = False
+    measurements: MeasurementMetrics | None = None
+
+    @model_validator(mode="after")
+    def measurement_scope(self) -> Self:
+        if (self.measurements is not None) != self.measurements_shared:
+            raise ValueError("Measurements must match sharing consent")
+        if (
+            self.measurements
+            and self.measurements.workflows is not None
+            and not self.shared.workflow_identifiers
+        ):
+            raise ValueError("Workflow measurement identities require consent")
+        return self
+
+
+Snapshot = StatisticsSnapshot | StatisticsSnapshotV2

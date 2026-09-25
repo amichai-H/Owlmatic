@@ -1,0 +1,35 @@
+# Collection and network delivery are independent and disabled by default.
+version: 2
+measurement:
+  enabled: false
+  retention_days: 90
+  poll_seconds: 5
+  sources: []
+  # Explicitly select a dedicated, single-task session to watch:
+  # - host: codex # or claude
+  #   session: /absolute/path/to/session.jsonl
+  #   task_id: deploy-2026-09-25
+  #   purpose: reuse
+  #   workload: deploy-60s-3-replicas
+  #   model: exact-model-used # required if the history does not record it
+  #   first_line: 1
+  #   last_line: 120 # select complete task boundaries in a multi-task history
+dashboard:
+  local:
+    enabled: false
+export:
+  schema_version: "2"
+  source_label: My local workspace # public metadata when exported
+  include_measurements: false # explicitly shares aggregate usage AND comparisons
+  mode: disabled # manual | after_workflow (also exports after measurement updates)
+  window_days: 30 # run statistics; measurement scope is retained measurement history
+  destination:
+    type: http
+    endpoint: http://127.0.0.1:8765/api/v2/snapshots
+    auth:
+      token_env: OWLMATIC_DASHBOARD_INGEST_TOKEN
+  include:
+    usage_totals: true
+    savings_estimates: false # legacy configured estimates, independent of measurements
+    daily_breakdown: false
+    workflow_identifiers: false # also gates per-workflow measurement details

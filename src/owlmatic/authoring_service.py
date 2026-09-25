@@ -17,15 +17,27 @@ class DraftStore(Protocol):
     def workspace(self) -> AbstractContextManager[Path]: ...
 
 
+class DraftMeasurement(Protocol):
+    def check_capture_task(self, task_id: str) -> None: ...
+    def capture_draft(self, path: Path, task_id: str) -> None: ...
+    def bind_draft(self, path: Path, ref: str) -> None: ...
+
+
 @dataclass(frozen=True)
 class AuthoringService:
     bundles: BundleStore
     workflows: WorkflowRepository
     execution: ExecutionService
     drafts: DraftStore
+    measurement: DraftMeasurement | None = None
 
-    def capture(self, name: str, output: Path | None = None) -> DraftReport:
-        return self.drafts.create(name, output)
+    def capture(self, name: str, output: Path | None = None, source_task: str | None = None) -> DraftReport:
+        if source_task and self.measurement:
+            self.measurement.check_capture_task(source_task)
+        draft = self.drafts.create(name, output)
+        if source_task and self.measurement:
+            self.measurement.capture_draft(draft.draft, source_task)
+        return draft
 
     def validate(
         self,
@@ -65,4 +77,7 @@ class AuthoringService:
                         matched=run.state == "completed" and run.outcome == case.outcome,
                     )
                 )
-        return ValidationReport(ref=workflow.ref, valid=all(r.matched for r in reports), tests=tuple(reports))
+        valid = all(r.matched for r in reports)
+        if valid and self.measurement:
+            self.measurement.bind_draft(directory, workflow.ref)
+        return ValidationReport(ref=workflow.ref, valid=valid, tests=tuple(reports))

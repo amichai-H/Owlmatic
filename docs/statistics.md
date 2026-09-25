@@ -15,7 +15,7 @@ The date window includes today and the preceding `days - 1` UTC calendar days, t
 
 Retention deletes history. Reports are labeled **retained local runs**, not lifetime usage. Two data directories are separate scopes. Exported HTML files remain snapshots; regenerating a report reflects current retained records and current baselines.
 
-## Configuring the model
+## Legacy configured estimates
 
 ```sh
 owlmatic stats baseline '<exact-ref>' \
@@ -45,8 +45,10 @@ Every terminal attempt is charged, including execution failures. Running attempt
 
 The full setup allowance is deducted once per observed, modeled version **in the selected window**. This is a conservative window scenario, not an amortized ledger. Do not sum overlapping windows or interpret the estimate as audited lifetime savings. Daily charts show operating estimates **before setup**; their sum minus setup equals the net card. The table shows net estimates per version.
 
-## What is not measured yet
+## Evidence-based measurement
 
-Generic MCP does not expose Codex/Claude Code's full conversation usage. Output bytes are not tokens. Provider usage ingestion, cached/input/output/reasoning counts, task-session correlation, and price accounting are not implemented. No dollar or human-time saving is claimed.
+The optional [measurement ledger](measurement.md) imports explicitly selected Codex or Claude Code histories, normalizes provider usage, correlates runs, and compares compatible manual tasks. It is independent of the legacy configured estimates above. Net estimates require declared creation and maintenance coverage. Measurement history has its own retention scope, separate from this calendar window.
 
-To establish actual savings, use the [matched benchmark protocol](benchmark-method.md), including the same scripted workflow invoked without Owlmatic. Compare successful task completion as well as tokens and elapsed time. Future usage ingestion should accept explicit session records with provenance and idempotent IDs, rather than scrape private host history or infer a tokenizer from byte counts.
+Generic MCP does not expose full conversation usage. Output bytes are not tokens; emitted output alone earns no context savings credit. Dollar and human-time savings are not claimed.
+
+To establish actual savings, use the [matched benchmark protocol](benchmark-method.md), including the same scripted workflow invoked without Owlmatic. Compare successful task completion as well as tokens and elapsed time. Use explicit session selections and stable task IDs; never infer provider token counts from output bytes.

@@ -4,6 +4,7 @@ import argparse
 
 from . import __version__
 from .export_cli import arguments as export_arguments
+from .measurement_cli import arguments as measurement_arguments
 
 
 def parser() -> argparse.ArgumentParser:
@@ -34,10 +35,13 @@ def parser() -> argparse.ArgumentParser:
         "dashboard",
         "export",
         "mcp",
+        "measure",
     ):
         p = sub.add_parser(name)
         p.add_argument("--json", action="store_true")
-        if name == "export":
+        if name == "measure":
+            measurement_arguments(p)
+        elif name == "export":
             export_arguments(p)
         elif name == "find":
             p.add_argument("query")
@@ -86,6 +90,7 @@ def parser() -> argparse.ArgumentParser:
             child = children.add_parser("init")
             child.add_argument("name")
             child.add_argument("--output")
+            child.add_argument("--source-task")
             child.add_argument("--json", action="store_true")
         elif name == "validate":
             p.add_argument("directory")

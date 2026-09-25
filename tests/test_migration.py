@@ -38,7 +38,7 @@ def test_v1_migration_preserves_runs_and_locks_and_fences_legacy_workers(tmp_pat
     assert runs.get(terminal.run_id) == terminal
     assert runs.is_pending(active.run_id) and runs.is_pending(terminal.run_id)
     with database.connect() as db:
-        assert db.execute("PRAGMA user_version").fetchone()[0] == 3
+        assert db.execute("PRAGMA user_version").fetchone()[0] == 4
         assert db.execute("SELECT run_id FROM locks").fetchone()[0] == active.run_id
     # Opening a migrated database again is idempotent.
     SqliteDatabase(tmp_path)

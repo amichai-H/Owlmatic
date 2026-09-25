@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .errors import OwlError
-from .export_contracts import StatisticsSnapshot
+from .export_contracts import Snapshot
 from .export_ports import ExportStore, SnapshotSender, StatisticsSource
 from .export_projection import snapshot
 from .export_state import DeliveryReport, ExportState, ExportStatus, PendingExport
@@ -17,7 +17,7 @@ from .serialization import encode
 from .statistics import StatisticsRequest
 
 
-def payload_digest(value: StatisticsSnapshot) -> str:
+def payload_digest(value: Snapshot) -> str:
     return hashlib.sha256(
         value.model_dump_json(exclude={"snapshot_id", "source_id", "sequence", "generated_at"}).encode()
     ).hexdigest()
@@ -86,7 +86,14 @@ class ExportService:
             return state
         report = self.statistics.report(StatisticsRequest(days=config.window_days))
         value = snapshot(
-            report, config.include, state.source_id or self.new_id(), self.new_id(), state.sequence + 1
+            report,
+            config.include,
+            state.source_id or self.new_id(),
+            self.new_id(),
+            state.sequence + 1,
+            version=config.schema_version,
+            source_label=config.source_label,
+            include_measurements=config.include_measurements,
         )
         if automatic and payload_digest(value) == state.last_payload_digest:
             return state
@@ -102,7 +109,7 @@ class ExportService:
         self.store.save(updated)
         return updated
 
-    def preview(self) -> StatisticsSnapshot:
+    def preview(self) -> Snapshot:
         with self.store.locked():
             config, state = self._synchronize()
             prepared = self._prepare(config, state)

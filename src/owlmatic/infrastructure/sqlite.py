@@ -22,7 +22,7 @@ class SqliteDatabase:
             db.execute("PRAGMA journal_mode=WAL")
             db.execute("BEGIN IMMEDIATE")
             version = db.execute("PRAGMA user_version").fetchone()[0]
-            if version not in (0, 1, 2, 3):
+            if version not in (0, 1, 2, 3, 4):
                 raise OwlError("DATABASE_VERSION", "This database needs a different Owlmatic version")
             db.execute(
                 "CREATE TABLE IF NOT EXISTS workflows (ref TEXT PRIMARY KEY, catalog TEXT NOT NULL, "
@@ -55,7 +55,25 @@ class SqliteDatabase:
             db.execute(
                 "CREATE INDEX IF NOT EXISTS runs_started_at ON runs(julianday(json_extract(data,'$.started_at')))"
             )
-            db.execute("PRAGMA user_version=3")
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_tasks(id TEXT PRIMARY KEY,source_key TEXT UNIQUE NOT NULL,data TEXT NOT NULL)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_baselines(ref TEXT NOT NULL,task_id TEXT NOT NULL,PRIMARY KEY(ref,task_id))"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_coverage(ref TEXT PRIMARY KEY,data TEXT NOT NULL)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_run_tasks(run_id TEXT PRIMARY KEY,task_id TEXT NOT NULL)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_emissions(id INTEGER PRIMARY KEY,data TEXT NOT NULL)"
+            )
+            db.execute("PRAGMA user_version=4")
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS measurement_drafts(path_key TEXT PRIMARY KEY,task_id TEXT NOT NULL)"
+            )
 
     @contextmanager
     def connect(self) -> Iterator[sqlite3.Connection]:

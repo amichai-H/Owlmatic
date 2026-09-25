@@ -7,6 +7,7 @@ import shutil
 import sys
 import uuid
 from collections.abc import Callable
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from .dashboard_service import DashboardService
 from .domain import Catalog
 from .execution_service import ExecutionService
 from .export_service import ExportService
+from .failures import public_failure
 from .infrastructure.authoring import FileDrafts, FileIntegrations, resource
 from .infrastructure.bundles import FileBundles
 from .infrastructure.dashboard import FileDashboard
@@ -26,6 +28,9 @@ from .infrastructure.export_store import FileExportStore
 from .infrastructure.files import FileArtifacts, FileSettings
 from .infrastructure.git import FileCatalogSource
 from .infrastructure.http_export import HttpSnapshotSender
+from .infrastructure.measurement.counter import LocalCounter
+from .infrastructure.measurement.history import LocalHistory
+from .infrastructure.measurement.repository import SqliteMeasurements
 from .infrastructure.process import SubprocessWorkflow
 from .infrastructure.run_guard import FileRunGuard
 from .infrastructure.run_repository import SqliteRuns
@@ -33,6 +38,8 @@ from .infrastructure.schema import JsonSchemaValidator
 from .infrastructure.sqlite import SqliteDatabase, SqliteWorkflows
 from .infrastructure.statistics import SqliteStatistics
 from .infrastructure.system import SubprocessLauncher, SystemClock, SystemCommands, SystemHost
+from .measurement.contracts import Exposure
+from .measurement.service import MeasurementService
 from .messages import CatalogReport, RuntimeReport
 from .policy import ExecutionPolicy
 from .recovery_service import RecoveryService
@@ -53,6 +60,9 @@ class Application:
     statistics: StatisticsService
     exports: ExportService
     dashboard: DashboardService
+    measurements: MeasurementService
+    prepare_tokenizer: Callable[[], Exposure]
+    record_response: Callable[[str, str, str | None], None]
 
 
 def create_application(root: Path | None = None) -> Application:
@@ -73,8 +83,36 @@ def create_application(root: Path | None = None) -> Application:
     catalog = CatalogService(settings, workflows, FileCatalogSource(root, bundles, commands), host)
     guard = FileRunGuard(root)
     recovery = RecoveryService(runs, artifacts, guard)
-    statistics = StatisticsService(SqliteStatistics(database), workflows, clock)
     export_store = FileExportStore(root)
+    counter = LocalCounter(root)
+
+    def measurement_changed() -> None:
+        try:
+            exports.push(automatic=True)
+        except Exception as error:
+            with suppress(Exception):
+                export_store.diagnostic(public_failure(error))
+
+    measurements = MeasurementService(
+        SqliteMeasurements(database),
+        LocalHistory(counter),
+        counter,
+        workflows,
+        runs,
+        clock,
+        lambda: export_store.configuration().measurement,
+        measurement_changed,
+    )
+
+    def record_response(operation: str, text: str, run_id: str | None) -> None:
+        try:
+            measurements.record_emission(operation, run_id, text)
+        except Exception as error:
+            # Observability cannot change a successful tool invocation into a failure.
+            with suppress(Exception):
+                export_store.diagnostic(public_failure(error))
+
+    statistics = StatisticsService(SqliteStatistics(database), workflows, clock, measurements.report)
     exports = ExportService(statistics, export_store, HttpSnapshotSender(), clock, lambda: uuid.uuid4().hex)
     execution = ExecutionService(
         workflows,
@@ -100,7 +138,7 @@ def create_application(root: Path | None = None) -> Application:
     return Application(
         catalog,
         execution,
-        AuthoringService(bundles, workflows, execution, FileDrafts(root)),
+        AuthoringService(bundles, workflows, execution, FileDrafts(root), measurements),
         Administration(settings, FileIntegrations()),
         supervisor,
         lambda: RuntimeReport(
@@ -116,4 +154,7 @@ def create_application(root: Path | None = None) -> Application:
         statistics,
         exports,
         DashboardService(statistics, FileDashboard(root), export_store),
+        measurements,
+        counter.prepare,
+        record_response,
     )

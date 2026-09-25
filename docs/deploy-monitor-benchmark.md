@@ -112,3 +112,11 @@ correctness is comparable. `C` was not measured here. Against a direct script, t
 follow-up has a negative difference, so this sample provides **no token break-even** for the
 extra Owlmatic layer. Its case must rest on discovery, reviewed execution, idempotency and
 retained evidence—and those features must survive the host behavior exposed by this test.
+
+## Measurement importer verification
+
+The local measurement importer was replayed against all 12 recorded Codex/Luna trial histories. Its normalized input/output totals exactly matched the recorded trial totals; no new model calls were made. The revised healthy trial was correlated with its original completed run and the verified manual trial, using the same host, model, and declared 60-second workload.
+
+That imported comparison reports **163,499 manual tokens**, **103,472 reuse tokens**, and **60,027 estimated operational tokens avoided**. It remains a one-sample historical comparison. Net savings is unknown because creation and maintenance cost coverage was not recorded. Visible tool-output bytes increased by 657 in this pair, so the system does not invent positive context savings to explain the provider-token difference.
+
+The direct-script control used **98,062 tokens**, which is **5,410 fewer than Owlmatic** in this trial. The measurement feature makes the evidence inspectable; it does not establish that Owlmatic outperforms a known direct script. The original rejected and unsuccessful trials remain in this report and must not be omitted from product evaluation.

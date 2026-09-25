@@ -154,3 +154,7 @@ records Codex-reported tokens; neither smaller payloads nor a single trial estab
 See [recovery and upgrade instructions](docs/recovery.md) before upgrading an existing data directory.
 
 Apache-2.0. No hosted service, telemetry, semantic embedding service, or private company access is required.
+
+### Evidence-based token savings
+
+Optional local measurement imports selected Codex or Claude Code histories without model calls. It records actual task usage, compares compatible manual baselines, and reports missing evidence instead of inventing savings. An optional watcher handles late usage updates. See [setup and accounting rules](docs/measurement.md) and the [v2 YAML example](config/measurement.example.yaml). Existing v1 exports remain supported.

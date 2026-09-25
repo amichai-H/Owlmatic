@@ -55,7 +55,9 @@ class FileExportStore:
             previous = self.configuration()
         except OwlError:
             previous = ObservabilityConfiguration()
-        disabled = ObservabilityConfiguration(dashboard=previous.dashboard)
+        disabled = ObservabilityConfiguration(
+            version=previous.version, dashboard=previous.dashboard, measurement=previous.measurement
+        )
         atomic_text(
             self.path, yaml.safe_dump(disabled.model_dump(mode="json", exclude_none=True), sort_keys=False)
         )

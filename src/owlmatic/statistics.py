@@ -7,6 +7,7 @@ from typing import Literal, Self
 from pydantic import Field, model_validator
 
 from .domain import Contract, Effects, Outcome, State
+from .measurement.contracts import MeasurementReport
 
 RunPurpose = Literal["workflow", "validation", "unknown"]
 
@@ -66,6 +67,7 @@ class DailyStatistics(Contract):
 
 
 class StatisticsReport(Contract):
+    measurements: MeasurementReport | None = None
     generated_at: str
     since: str
     days: int

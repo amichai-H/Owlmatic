@@ -8,6 +8,7 @@ from pydantic import Field, field_validator, model_validator
 
 from .domain import Contract
 from .export_contracts import ExportScope
+from .measurement.contracts import MeasurementConfiguration
 
 
 class ExportAuth(Contract):
@@ -66,6 +67,9 @@ class DeliveryPolicy(Contract):
 
 
 class ExportConfiguration(Contract):
+    schema_version: Literal["1", "2"] = "1"
+    source_label: str | None = Field(default=None, min_length=1, max_length=100)
+    include_measurements: bool = False
     mode: Literal["disabled", "manual", "after_workflow"] = "disabled"
     window_days: int = Field(default=30, ge=1, le=3650)
     destination: HttpDestination | None = None
@@ -74,6 +78,8 @@ class ExportConfiguration(Contract):
 
     @model_validator(mode="after")
     def configured_destination(self) -> Self:
+        if self.schema_version == "1" and (self.include_measurements or self.source_label):
+            raise ValueError("Source labels and measurements require export schema version 2")
         if self.mode != "disabled" and self.destination is None:
             raise ValueError("Enabled export requires a destination")
         return self
@@ -88,6 +94,15 @@ class DashboardConfiguration(Contract):
 
 
 class ObservabilityConfiguration(Contract):
-    version: Literal[1] = 1
+    version: Literal[1, 2] = 1
+    measurement: MeasurementConfiguration = Field(default_factory=MeasurementConfiguration)
     dashboard: DashboardConfiguration = Field(default_factory=DashboardConfiguration)
     export: ExportConfiguration = Field(default_factory=ExportConfiguration)
+
+    @model_validator(mode="after")
+    def compatible_version(self) -> Self:
+        if self.version == 1 and (
+            self.measurement != MeasurementConfiguration() or self.export.schema_version != "1"
+        ):
+            raise ValueError("Measurement and export v2 require observability version 2")
+        return self

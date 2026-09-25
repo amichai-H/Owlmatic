@@ -20,6 +20,8 @@ def test_application_modules_do_not_import_infrastructure_or_transports() -> Non
         "export_projection",
         "automatic_export",
         "dashboard_service",
+        "measurement/service",
+        "measurement/estimation",
     }
     forbidden = {
         "infrastructure",

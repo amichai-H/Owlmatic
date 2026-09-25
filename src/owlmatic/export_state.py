@@ -5,12 +5,12 @@ from typing import Literal
 from pydantic import Field
 
 from .domain import Contract, Failure
-from .export_contracts import Identifier, StatisticsSnapshot
+from .export_contracts import Identifier, Snapshot
 from .observability_config import ObservabilityConfiguration
 
 
 class PendingExport(Contract):
-    snapshot: StatisticsSnapshot
+    snapshot: Snapshot
     created_at: float
     attempts: int = Field(default=0, ge=0)
     next_attempt_at: float = 0

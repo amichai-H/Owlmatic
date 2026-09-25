@@ -48,3 +48,9 @@ Snapshots are **not additive events**. Receivers replace the latest snapshot for
 [owlmatic-dashboard](https://github.com/amichai-H/owlmatic-dashboard) is an independent Python server with its own configuration, database, authentication, tests, CI, and deployment lifecycle. It consumes the public v1 contract and does not import Owlmatic internals. Another service can implement the same contract. New transport implementations can satisfy `SnapshotSender`; the first release implements HTTP only and loads no arbitrary plugins from YAML.
 
 For local testing, start the receiver at `http://127.0.0.1:8765`, give Owlmatic its ingest token, configure `manual`, preview, then push. Open the receiver UI and enter its separate read token. After validating manual delivery, switch the client to `after_workflow` and run a trusted synthetic example.
+
+## Version 2 measurement exports
+
+Deploy a v2-capable dashboard receiver first, then opt in with `version: 2`, `export.schema_version: "2"`, and the `/api/v2/snapshots` endpoint. `include_measurements: true` shares aggregate task usage and savings comparisons; workflow/model/workload details also require `include.workflow_identifiers: true`. Raw histories, prompts, outputs, source paths, task IDs, and credentials are never included. `source_label` is explicitly configured public metadata. V1 payloads and ingestion remain supported without silent downgrade.
+
+The dashboard reads `/api/v2/sources` for labels, measurements, and server receipt timestamps. `/api/v1/sources` retains its original shape, projecting v2 records to legacy run statistics. Refresh fetches the latest received snapshot; it does not trigger local exports. Measurement updates trigger automatic exports only in `after_workflow` mode; manual mode still requires `owlmatic export push`. See [measurement configuration](measurement.md).
