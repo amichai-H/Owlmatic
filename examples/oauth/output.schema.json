@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "token_rotated",
+    "token_persisted",
+    "old_token_rejected",
+    "stored_token_usable"
+  ],
+  "properties": {
+    "token_rotated": {
+      "type": "boolean"
+    },
+    "token_persisted": {
+      "type": "boolean"
+    },
+    "old_token_rejected": {
+      "type": "boolean"
+    },
+    "stored_token_usable": {
+      "type": "boolean"
+    }
+  }
+}

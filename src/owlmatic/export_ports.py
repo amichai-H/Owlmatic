@@ -1,0 +1,36 @@
+"""External boundaries for optional delivery and completion observation."""
+
+from contextlib import AbstractContextManager
+from pathlib import Path
+from typing import Protocol
+
+from .domain import Failure
+from .export_state import ExportState
+from .observability_config import ExportConfiguration, ObservabilityConfiguration
+from .statistics import StatisticsReport, StatisticsRequest
+
+
+class StatisticsSource(Protocol):
+    def report(self, request: StatisticsRequest) -> StatisticsReport: ...
+
+
+class ExportStore(Protocol):
+    def locked(self) -> AbstractContextManager[None]: ...
+    def configuration(self) -> ObservabilityConfiguration: ...
+    def install(self, path: Path) -> ObservabilityConfiguration: ...
+    def disable(self) -> None: ...
+    def load(self) -> ExportState: ...
+    def save(self, state: ExportState) -> None: ...
+    def diagnostic(self, failure: Failure) -> None: ...
+
+
+class SnapshotSender(Protocol):
+    def send(self, configuration: ExportConfiguration, snapshot_id: str, body: bytes) -> None: ...
+
+
+class ExportWorkerLauncher(Protocol):
+    def start(self, run_id: str, timeout: int, token_env: str | None) -> None: ...
+
+
+class CompletionObserver(Protocol):
+    def observe(self, run_id: str, timeout: int) -> None: ...

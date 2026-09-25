@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "example.regression",
+  "version": "1.0.0",
+  "description": "Check synthetic release metrics for a production-style regression",
+  "owner": "owlmatic-examples",
+  "entrypoint": [
+    "python3",
+    "run.py"
+  ],
+  "input_schema": "input.schema.json",
+  "output_schema": "output.schema.json",
+  "environments": [
+    "simulation"
+  ],
+  "effects": [],
+  "execution": {
+    "timeout_seconds": 15
+  },
+  "verification": {
+    "required_checks": [
+      "no_regression"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": {
+        "healthy": true
+      },
+      "outcome": "pass"
+    },
+    {
+      "inputs": {
+        "healthy": false
+      },
+      "outcome": "fail"
+    }
+  ]
+}

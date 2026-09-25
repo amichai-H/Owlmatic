@@ -1,0 +1,331 @@
+{
+  "$defs": {
+    "DailyMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "day": {
+          "format": "date",
+          "title": "Day",
+          "type": "string"
+        },
+        "runs": {
+          "minimum": 0,
+          "title": "Runs",
+          "type": "integer"
+        },
+        "verified": {
+          "minimum": 0,
+          "title": "Verified",
+          "type": "integer"
+        },
+        "estimated_tokens_saved_before_setup": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Tokens Saved Before Setup"
+        }
+      },
+      "required": [
+        "day",
+        "runs",
+        "verified"
+      ],
+      "title": "DailyMetrics",
+      "type": "object"
+    },
+    "ExportScope": {
+      "additionalProperties": false,
+      "properties": {
+        "usage_totals": {
+          "const": true,
+          "default": true,
+          "title": "Usage Totals",
+          "type": "boolean"
+        },
+        "savings_estimates": {
+          "default": false,
+          "title": "Savings Estimates",
+          "type": "boolean"
+        },
+        "daily_breakdown": {
+          "default": false,
+          "title": "Daily Breakdown",
+          "type": "boolean"
+        },
+        "workflow_identifiers": {
+          "default": false,
+          "title": "Workflow Identifiers",
+          "type": "boolean"
+        }
+      },
+      "title": "ExportScope",
+      "type": "object"
+    },
+    "SavingsMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "estimate",
+          "default": "estimate",
+          "title": "Kind",
+          "type": "string"
+        },
+        "modeled_runs": {
+          "minimum": 0,
+          "title": "Modeled Runs",
+          "type": "integer"
+        },
+        "manual_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manual Tokens"
+        },
+        "owlmatic_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owlmatic Tokens"
+        },
+        "setup_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Setup Tokens"
+        },
+        "net_tokens_saved": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Net Tokens Saved"
+        }
+      },
+      "required": [
+        "modeled_runs"
+      ],
+      "title": "SavingsMetrics",
+      "type": "object"
+    },
+    "UsageMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "runs": {
+          "minimum": 0,
+          "title": "Runs",
+          "type": "integer"
+        },
+        "terminal": {
+          "minimum": 0,
+          "title": "Terminal",
+          "type": "integer"
+        },
+        "verified": {
+          "minimum": 0,
+          "title": "Verified",
+          "type": "integer"
+        },
+        "execution_errors": {
+          "minimum": 0,
+          "title": "Execution Errors",
+          "type": "integer"
+        },
+        "running": {
+          "minimum": 0,
+          "title": "Running",
+          "type": "integer"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "runs",
+        "terminal",
+        "verified",
+        "execution_errors",
+        "running",
+        "duration_ms"
+      ],
+      "title": "UsageMetrics",
+      "type": "object"
+    },
+    "WorkflowMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "maxLength": 512,
+          "title": "Ref",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/UsageMetrics"
+        },
+        "savings": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SavingsMetrics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "ref",
+        "usage"
+      ],
+      "title": "WorkflowMetrics",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "kind": {
+      "const": "owlmatic.statistics.snapshot",
+      "default": "owlmatic.statistics.snapshot",
+      "title": "Kind",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "pattern": "^[0-9a-f]{32}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "source_id": {
+      "pattern": "^[0-9a-f]{32}$",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "generated_at": {
+      "maxLength": 64,
+      "title": "Generated At",
+      "type": "string"
+    },
+    "since": {
+      "maxLength": 64,
+      "title": "Since",
+      "type": "string"
+    },
+    "days": {
+      "maximum": 3650,
+      "minimum": 1,
+      "title": "Days",
+      "type": "integer"
+    },
+    "scope": {
+      "const": "retained_local_runs",
+      "default": "retained_local_runs",
+      "title": "Scope",
+      "type": "string"
+    },
+    "shared": {
+      "$ref": "#/$defs/ExportScope"
+    },
+    "usage": {
+      "$ref": "#/$defs/UsageMetrics"
+    },
+    "savings": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SavingsMetrics"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "daily": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/DailyMetrics"
+          },
+          "maxItems": 3650,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Daily"
+    },
+    "workflows": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/WorkflowMetrics"
+          },
+          "maxItems": 10000,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Workflows"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "source_id",
+    "sequence",
+    "generated_at",
+    "since",
+    "days",
+    "shared",
+    "usage"
+  ],
+  "title": "StatisticsSnapshot",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tests",
+    "suite_passed"
+  ],
+  "properties": {
+    "tests": {
+      "type": "integer"
+    },
+    "suite_passed": {
+      "type": "boolean"
+    }
+  }
+}

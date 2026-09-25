@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "example.oauth",
+  "version": "1.0.0",
+  "description": "Simulate OAuth refresh-token rotation and durable persistence",
+  "owner": "owlmatic-examples",
+  "entrypoint": [
+    "python3",
+    "run.py"
+  ],
+  "input_schema": "input.schema.json",
+  "output_schema": "output.schema.json",
+  "environments": [
+    "simulation"
+  ],
+  "effects": [
+    "writes synthetic token artifact"
+  ],
+  "execution": {
+    "timeout_seconds": 15
+  },
+  "verification": {
+    "required_checks": [
+      "token_rotated",
+      "token_persisted",
+      "old_token_rejected",
+      "stored_token_usable"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": {
+        "healthy": true
+      },
+      "outcome": "pass"
+    },
+    {
+      "inputs": {
+        "healthy": false
+      },
+      "outcome": "fail"
+    }
+  ]
+}

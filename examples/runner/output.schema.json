@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_verified"
+  ],
+  "properties": {
+    "artifact_verified": {
+      "type": "boolean"
+    }
+  }
+}

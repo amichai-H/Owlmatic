@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "example.logs",
+  "version": "1.0.0",
+  "description": "Collect logs from three synthetic systems and detect errors",
+  "owner": "owlmatic-examples",
+  "entrypoint": [
+    "python3",
+    "run.py"
+  ],
+  "input_schema": "input.schema.json",
+  "output_schema": "output.schema.json",
+  "environments": [
+    "simulation"
+  ],
+  "effects": [
+    "writes synthetic log artifacts"
+  ],
+  "execution": {
+    "timeout_seconds": 15
+  },
+  "verification": {
+    "required_checks": [
+      "sources_complete",
+      "no_errors"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": {
+        "healthy": true
+      },
+      "outcome": "pass"
+    },
+    {
+      "inputs": {
+        "healthy": false
+      },
+      "outcome": "fail"
+    }
+  ]
+}

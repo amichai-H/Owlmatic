@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "example.runner",
+  "version": "1.0.0",
+  "description": "Verify an external runner using a local subprocess simulation",
+  "owner": "owlmatic-examples",
+  "entrypoint": [
+    "python3",
+    "run.py"
+  ],
+  "input_schema": "input.schema.json",
+  "output_schema": "output.schema.json",
+  "environments": [
+    "simulation"
+  ],
+  "effects": [
+    "writes simulated runner artifacts"
+  ],
+  "execution": {
+    "timeout_seconds": 15
+  },
+  "verification": {
+    "required_checks": [
+      "job_completed",
+      "job_identity",
+      "artifact_verified"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": {
+        "healthy": true
+      },
+      "outcome": "pass"
+    },
+    {
+      "inputs": {
+        "healthy": false
+      },
+      "outcome": "fail"
+    }
+  ]
+}

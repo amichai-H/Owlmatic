@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sources",
+    "errors"
+  ],
+  "properties": {
+    "sources": {
+      "type": "integer"
+    },
+    "errors": {
+      "type": "integer"
+    }
+  }
+}

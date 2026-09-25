@@ -1,0 +1,24 @@
+version: 1
+dashboard:
+  local:
+    enabled: false
+export:
+  mode: disabled # disabled | manual | after_workflow
+  window_days: 30
+  destination:
+    type: http
+    endpoint: http://127.0.0.1:8765/api/v1/snapshots
+    auth:
+      token_env: OWLMATIC_DASHBOARD_INGEST_TOKEN
+  include:
+    usage_totals: true
+    savings_estimates: false
+    daily_breakdown: false
+    workflow_identifiers: false
+  delivery:
+    timeout_seconds: 5
+    max_attempts: 5
+    retry_initial_seconds: 2
+    retry_max_seconds: 300
+    pending_retention_days: 7
+    max_pending_bytes: 1048576

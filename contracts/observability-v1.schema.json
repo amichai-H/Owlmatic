@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "DashboardConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "local": {
+          "$ref": "#/$defs/LocalDashboard"
+        }
+      },
+      "title": "DashboardConfiguration",
+      "type": "object"
+    },
+    "DeliveryPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "timeout_seconds": {
+          "default": 5,
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "max_attempts": {
+          "default": 5,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "retry_initial_seconds": {
+          "default": 2,
+          "maximum": 300,
+          "minimum": 1,
+          "title": "Retry Initial Seconds",
+          "type": "integer"
+        },
+        "retry_max_seconds": {
+          "default": 300,
+          "maximum": 3600,
+          "minimum": 1,
+          "title": "Retry Max Seconds",
+          "type": "integer"
+        },
+        "pending_retention_days": {
+          "default": 7,
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Pending Retention Days",
+          "type": "integer"
+        },
+        "max_pending_bytes": {
+          "default": 1048576,
+          "maximum": 1048576,
+          "minimum": 1024,
+          "title": "Max Pending Bytes",
+          "type": "integer"
+        }
+      },
+      "title": "DeliveryPolicy",
+      "type": "object"
+    },
+    "ExportAuth": {
+      "additionalProperties": false,
+      "properties": {
+        "token_env": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token Env"
+        }
+      },
+      "title": "ExportAuth",
+      "type": "object"
+    },
+    "ExportConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "default": "disabled",
+          "enum": [
+            "disabled",
+            "manual",
+            "after_workflow"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "window_days": {
+          "default": 30,
+          "maximum": 3650,
+          "minimum": 1,
+          "title": "Window Days",
+          "type": "integer"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HttpDestination"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "include": {
+          "$ref": "#/$defs/ExportScope"
+        },
+        "delivery": {
+          "$ref": "#/$defs/DeliveryPolicy"
+        }
+      },
+      "title": "ExportConfiguration",
+      "type": "object"
+    },
+    "ExportScope": {
+      "additionalProperties": false,
+      "properties": {
+        "usage_totals": {
+          "const": true,
+          "default": true,
+          "title": "Usage Totals",
+          "type": "boolean"
+        },
+        "savings_estimates": {
+          "default": false,
+          "title": "Savings Estimates",
+          "type": "boolean"
+        },
+        "daily_breakdown": {
+          "default": false,
+          "title": "Daily Breakdown",
+          "type": "boolean"
+        },
+        "workflow_identifiers": {
+          "default": false,
+          "title": "Workflow Identifiers",
+          "type": "boolean"
+        }
+      },
+      "title": "ExportScope",
+      "type": "object"
+    },
+    "HttpDestination": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "http",
+          "default": "http",
+          "title": "Type",
+          "type": "string"
+        },
+        "endpoint": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "auth": {
+          "$ref": "#/$defs/ExportAuth"
+        }
+      },
+      "required": [
+        "endpoint"
+      ],
+      "title": "HttpDestination",
+      "type": "object"
+    },
+    "LocalDashboard": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        }
+      },
+      "title": "LocalDashboard",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1,
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "dashboard": {
+      "$ref": "#/$defs/DashboardConfiguration"
+    },
+    "export": {
+      "$ref": "#/$defs/ExportConfiguration"
+    }
+  },
+  "title": "ObservabilityConfiguration",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "schema_ready"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer"
+    },
+    "schema_ready": {
+      "type": "boolean"
+    }
+  }
+}

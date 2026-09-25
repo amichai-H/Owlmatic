@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "example.e2e",
+  "version": "1.0.0",
+  "description": "Run a disposable subprocess test suite",
+  "owner": "owlmatic-examples",
+  "entrypoint": [
+    "python3",
+    "run.py"
+  ],
+  "input_schema": "input.schema.json",
+  "output_schema": "output.schema.json",
+  "environments": [
+    "simulation"
+  ],
+  "effects": [],
+  "execution": {
+    "timeout_seconds": 15
+  },
+  "verification": {
+    "required_checks": [
+      "suite_passed"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": {
+        "healthy": true
+      },
+      "outcome": "pass"
+    },
+    {
+      "inputs": {
+        "healthy": false
+      },
+      "outcome": "fail"
+    }
+  ]
+}

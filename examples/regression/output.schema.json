@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_errors",
+    "release_errors",
+    "samples"
+  ],
+  "properties": {
+    "baseline_errors": {
+      "type": "integer"
+    },
+    "release_errors": {
+      "type": "integer"
+    },
+    "samples": {
+      "type": "integer"
+    }
+  }
+}
