@@ -1,0 +1,57 @@
+version: 1
+recipe: invoice-replay
+cases:
+  - id: original-incident
+    worker: {attempts: [clean, target_failure]}
+    expected: {finding: reproduced, attempts: 2}
+
+  # Same workflow, different DB record, input rows, starting revision and failure timing.
+  - id: another-account
+    amounts_cents: [499, 1299, 2500]
+    revision: 42
+    worker: {attempts: [clean, clean, target_failure]}
+    expected: {finding: reproduced, attempts: 3}
+
+  - id: clean-replays
+    worker: {attempts: [clean]}
+    expected: {finding: not_reproduced, attempts: 3}
+
+  - id: different-error
+    worker: {attempts: [clean, different_failure]}
+    expected: {finding: inconclusive, attempts: 2}
+
+  - id: version-changed
+    worker: {environment_drift: true}
+    expected: {finding: blocked, attempts: 0}
+
+  - id: incomplete-state
+    snapshot: missing_state
+    expected: {finding: blocked, attempts: 0}
+
+  - id: incomplete-inputs
+    snapshot: missing_item
+    expected: {finding: blocked, attempts: 0}
+
+  - id: external-side-effects
+    replay_effects: external
+    expected: {finding: blocked, attempts: 0}
+
+  - id: changed-inputs
+    worker: {attempts: [input_drift]}
+    expected: {finding: inconclusive, attempts: 1}
+
+  - id: dirty-state
+    worker: {attempts: [dirty_state]}
+    expected: {finding: inconclusive, attempts: 1}
+
+  - id: lost-acknowledgement
+    worker: {attempts: [lost_ack]}
+    expected: {finding: inconclusive, attempts: 1}
+
+  - id: false-success
+    worker: {attempts: [bad_postcondition]}
+    expected: {finding: inconclusive, attempts: 1}
+
+  - id: unsupported-job
+    snapshot: unsupported_task
+    expected: {finding: blocked, attempts: 0}

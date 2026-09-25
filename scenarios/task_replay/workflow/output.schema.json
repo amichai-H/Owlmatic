@@ -1,0 +1,57 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "finding": {
+      "enum": [
+        "reproduced",
+        "not_reproduced",
+        "inconclusive",
+        "blocked"
+      ],
+      "title": "Finding",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "attempts": {
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "clean_attempts": {
+      "title": "Clean Attempts",
+      "type": "integer"
+    },
+    "matching_failures": {
+      "title": "Matching Failures",
+      "type": "integer"
+    },
+    "diagnosis_required": {
+      "const": true,
+      "default": true,
+      "title": "Diagnosis Required",
+      "type": "boolean"
+    },
+    "proves_fixed": {
+      "const": false,
+      "default": false,
+      "title": "Proves Fixed",
+      "type": "boolean"
+    },
+    "evidence_file": {
+      "default": "attempts.json",
+      "title": "Evidence File",
+      "type": "string"
+    }
+  },
+  "required": [
+    "finding",
+    "reason",
+    "attempts",
+    "clean_attempts",
+    "matching_failures"
+  ],
+  "title": "Summary",
+  "type": "object"
+}

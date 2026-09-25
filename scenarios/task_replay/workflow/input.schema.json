@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "database": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "title": "Database",
+      "type": "string"
+    },
+    "execution_id": {
+      "pattern": "^[a-zA-Z0-9._-]{1,80}$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "max_attempts": {
+      "default": 3,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "attempt_timeout_seconds": {
+      "default": 3.0,
+      "exclusiveMinimum": 0,
+      "maximum": 10,
+      "title": "Attempt Timeout Seconds",
+      "type": "number"
+    },
+    "total_timeout_seconds": {
+      "default": 15.0,
+      "exclusiveMinimum": 0,
+      "maximum": 60,
+      "title": "Total Timeout Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "database",
+    "execution_id"
+  ],
+  "title": "Inputs",
+  "type": "object"
+}

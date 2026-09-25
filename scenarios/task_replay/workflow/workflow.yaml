@@ -1,0 +1,18 @@
+schema_version: 1
+id: lab.task-reproduce
+version: "1.0.0"
+description: Extract a failed invoice job and its historical input/state rows from a read-only mock DB, then run a bounded local reproduction experiment
+owner: owlmatic-labs
+aliases: [reproduce background job, replay failed task, extract job inputs]
+entrypoint: [python3, -m, reproduction.entrypoint]
+input_schema: input.schema.json
+output_schema: output.schema.json
+environments: [simulation]
+effects: []
+requirements:
+  commands: [python3]
+  paths: [scenarios/task_replay/worker.py]
+execution:
+  timeout_seconds: 90
+verification:
+  required_checks: [target_failure_absent_in_bounded_replay]

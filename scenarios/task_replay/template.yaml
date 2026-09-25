@@ -1,0 +1,14 @@
+# Copy this file, add cases, then run with --suite /path/to/your.yaml.
+# yaml-language-server: $schema=./scenario.schema.json
+version: 1
+recipe: invoice-replay
+cases:
+  - id: my-failed-job
+    amounts_cents: [499, 2500]
+    revision: 12
+    max_attempts: 3
+    worker:
+      attempts: [clean, target_failure]
+    expected:
+      finding: reproduced
+      attempts: 2

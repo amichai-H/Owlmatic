@@ -29,6 +29,7 @@ jobs:
       - run: python -m ruff format --check src tests examples benchmark scenarios
       - run: python -m mypy
       - run: python -m scenarios.deploy_monitor.live_check
+      - run: python -m scenarios.task_replay.demo
       - run: python -m pytest -q
       - run: python -m build
       - name: Check installed wheel outside checkout

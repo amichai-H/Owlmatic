@@ -1,0 +1,178 @@
+{
+  "$defs": {
+    "Case": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9._-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "amounts_cents": {
+          "default": [
+            100,
+            250
+          ],
+          "items": {
+            "exclusiveMinimum": 0,
+            "maximum": 1000000,
+            "type": "integer"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Amounts Cents",
+          "type": "array"
+        },
+        "revision": {
+          "default": 7,
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "replay_effects": {
+          "default": "local_only",
+          "enum": [
+            "local_only",
+            "external"
+          ],
+          "title": "Replay Effects",
+          "type": "string"
+        },
+        "snapshot": {
+          "default": "complete",
+          "enum": [
+            "complete",
+            "missing_state",
+            "missing_item",
+            "unsupported_task"
+          ],
+          "title": "Snapshot",
+          "type": "string"
+        },
+        "worker": {
+          "$ref": "#/$defs/WorkerPlan"
+        },
+        "max_attempts": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "expected": {
+          "$ref": "#/$defs/Expected"
+        }
+      },
+      "required": [
+        "id",
+        "expected"
+      ],
+      "title": "Case",
+      "type": "object"
+    },
+    "Expected": {
+      "additionalProperties": false,
+      "properties": {
+        "finding": {
+          "enum": [
+            "reproduced",
+            "not_reproduced",
+            "inconclusive",
+            "blocked"
+          ],
+          "title": "Finding",
+          "type": "string"
+        },
+        "attempts": {
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "finding",
+        "attempts"
+      ],
+      "title": "Expected",
+      "type": "object"
+    },
+    "WorkerPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "attempts": {
+          "default": [
+            "clean",
+            "target_failure"
+          ],
+          "items": {
+            "enum": [
+              "clean",
+              "target_failure",
+              "different_failure",
+              "input_drift",
+              "dirty_state",
+              "lost_ack",
+              "timeout",
+              "bad_postcondition"
+            ],
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Attempts",
+          "type": "array"
+        },
+        "environment_drift": {
+          "default": false,
+          "title": "Environment Drift",
+          "type": "boolean"
+        }
+      },
+      "title": "WorkerPlan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1,
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "recipe": {
+      "const": "invoice-replay",
+      "default": "invoice-replay",
+      "title": "Recipe",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/Case"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "cases"
+  ],
+  "title": "Suite",
+  "type": "object"
+}
