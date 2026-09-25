@@ -21,7 +21,7 @@ owlmatic = "owlmatic.cli:main"
 packages = ["src/owlmatic"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src", "tests", "examples", "skills", "benchmark", "docs", "contracts", "config", "README.md", "LICENSE", "CONTRIBUTING.md", "pyproject.toml", "requirements-dev.lock"]
+include = ["src", "tests", "examples", "scenarios", "skills", "benchmark", "docs", "contracts", "config", "README.md", "LICENSE", "CONTRIBUTING.md", "pyproject.toml", "requirements-dev.lock"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "skills/owlmatic" = "owlmatic/resources/skill"
@@ -40,7 +40,7 @@ select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
-files = ["src/owlmatic", "tests", "benchmark"]
+files = ["src/owlmatic", "tests", "benchmark", "scenarios"]
 plugins = ["pydantic.mypy"]
 
 [tool.pydantic-mypy]

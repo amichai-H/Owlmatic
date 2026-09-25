@@ -1,0 +1,17 @@
+schema_version: 1
+id: lab.deploy-monitor
+version: "1.0.0"
+description: Deploy a version and verify all replicas plus a complete error-free log window against local mock APIs
+owner: owlmatic-labs
+entrypoint: [python3, -m, monitoring.entrypoint]
+input_schema: input.schema.json
+output_schema: output.schema.json
+environments: [simulation]
+effects: [creates a deployment in the local mock database]
+requirements:
+  commands: [python3]
+execution:
+  timeout_seconds: 420
+  concurrency_input: service
+verification:
+  required_checks: [deployment_window]

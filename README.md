@@ -130,18 +130,26 @@ Capture is assisted authoring: the current agent edits a scaffold and independen
 
 The six [examples](examples/README.md) cover E2E, bootstrap, OAuth, log collection, regression checks, and a runner simulation.
 
+For a real-time local deployment exercise, use the [deploy-and-monitor lab](scenarios/deploy_monitor/README.md).
+It starts separate mock deployment and log APIs, verifies a one-minute window, and tests late errors and missing
+evidence. Its [measured Luna benchmark](docs/deploy-monitor-benchmark.md) compares manual work, direct automation,
+and Owlmatic—including failures and a follow-up improvement to the agent guidance.
+
 ## Development and evaluation
 
 ```sh
-python -m ruff check src tests examples benchmark
-python -m ruff format --check src tests examples benchmark
+python -m ruff check src tests examples benchmark scenarios
+python -m ruff format --check src tests examples benchmark scenarios
 python -m mypy
 python -m pytest -q
 python -m build
 python -m benchmark.transport
+python -m scenarios.deploy_monitor.live_check
 ```
 
-The benchmark measures actual payload bytes without invoking a model. Agent token savings require controlled Codex and Claude Code trials; smaller payloads alone do not establish those savings. See [benchmark methodology](docs/benchmark-method.md), [architecture and roadmap](docs/architecture.md), and [contributing](CONTRIBUTING.md).
+`benchmark.transport` measures payload bytes without invoking a model. The opt-in deployment lab additionally
+records Codex-reported tokens; neither smaller payloads nor a single trial establishes general savings. See
+[benchmark methodology](docs/benchmark-method.md), [architecture and roadmap](docs/architecture.md), and [contributing](CONTRIBUTING.md).
 
 See [recovery and upgrade instructions](docs/recovery.md) before upgrading an existing data directory.
 

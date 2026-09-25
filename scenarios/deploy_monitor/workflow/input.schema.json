@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "deploy_url": {
+      "title": "Deploy Url",
+      "type": "string"
+    },
+    "logs_url": {
+      "title": "Logs Url",
+      "type": "string"
+    },
+    "service": {
+      "pattern": "^[a-zA-Z0-9._-]{1,80}$",
+      "title": "Service",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^[a-zA-Z0-9._-]{1,80}$",
+      "title": "Version",
+      "type": "string"
+    },
+    "request_key": {
+      "pattern": "^[a-zA-Z0-9._-]{1,80}$",
+      "title": "Request Key",
+      "type": "string"
+    },
+    "monitor_minutes": {
+      "default": 1.0,
+      "exclusiveMinimum": 0,
+      "maximum": 5,
+      "title": "Monitor Minutes",
+      "type": "number"
+    },
+    "rollout_timeout_seconds": {
+      "default": 10.0,
+      "exclusiveMinimum": 0,
+      "maximum": 60,
+      "title": "Rollout Timeout Seconds",
+      "type": "number"
+    },
+    "ingestion_grace_seconds": {
+      "default": 5.0,
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Ingestion Grace Seconds",
+      "type": "number"
+    },
+    "poll_seconds": {
+      "default": 1.0,
+      "exclusiveMinimum": 0,
+      "maximum": 5,
+      "title": "Poll Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "deploy_url",
+    "logs_url",
+    "service",
+    "version",
+    "request_key"
+  ],
+  "title": "Inputs",
+  "type": "object"
+}

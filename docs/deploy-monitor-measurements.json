@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-25",
+  "host": "codex-cli 0.156.1",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "low",
+  "monitor_seconds": 60,
+  "note": "Exploratory trials, not randomized or replicated. Setup and maintenance usage unmeasured. Cached input is included in total; reasoning is already included in output.",
+  "trials": [
+    {
+      "trial_id": "boundary_error-direct-ca2c68b3",
+      "arm": "direct",
+      "case": "boundary_error",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 97877,
+        "cached_input_tokens": 78592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 462,
+        "reasoning_output_tokens": 0
+      },
+      "total_tokens": 98339,
+      "uncached_input_tokens": 19285,
+      "outcome": "fail",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 78.44,
+      "completed_shell_items": 3,
+      "raw_events_sha256": "aa2a94d71bf27e30fd2c2b3d8141416e11e75b41dc8936260ceb2f0fba9a4fa9"
+    },
+    {
+      "trial_id": "boundary_error-manual-2be02bc4",
+      "arm": "manual",
+      "case": "boundary_error",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 108057,
+        "cached_input_tokens": 84736,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3588,
+        "reasoning_output_tokens": 604
+      },
+      "total_tokens": 111645,
+      "uncached_input_tokens": 23321,
+      "outcome": "fail",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 131.37,
+      "completed_shell_items": 3,
+      "raw_events_sha256": "d6f54b21c1911fe77e41f5fec238805abe952c82274249f4a448063f66abfbc5"
+    },
+    {
+      "trial_id": "boundary_error-owlmatic-edd8a038",
+      "arm": "owlmatic",
+      "case": "boundary_error",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 82951,
+        "cached_input_tokens": 62464,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 534,
+        "reasoning_output_tokens": 0
+      },
+      "total_tokens": 83485,
+      "uncached_input_tokens": 20487,
+      "outcome": "fail",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 78.79,
+      "completed_shell_items": 4,
+      "raw_events_sha256": "357157cc144385ffe73f609378d6c15fa909c7d9b6c6dada9e1518f1a3410143"
+    },
+    {
+      "trial_id": "missing_logs-direct-ef8332e7",
+      "arm": "direct",
+      "case": "missing_logs",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 177662,
+        "cached_input_tokens": 162560,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 717,
+        "reasoning_output_tokens": 94
+      },
+      "total_tokens": 178379,
+      "uncached_input_tokens": 15102,
+      "outcome": "inconclusive",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 89.77,
+      "completed_shell_items": 3,
+      "raw_events_sha256": "11a2c0ab6c42f48812249a8aa282130eee5aa410d3d79a6527f6c3315d99218c"
+    },
+    {
+      "trial_id": "missing_logs-manual-ff4ce504",
+      "arm": "manual",
+      "case": "missing_logs",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 185199,
+        "cached_input_tokens": 158464,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3838,
+        "reasoning_output_tokens": 829
+      },
+      "total_tokens": 189037,
+      "uncached_input_tokens": 26735,
+      "outcome": "inconclusive",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 270.33,
+      "completed_shell_items": 7,
+      "raw_events_sha256": "a8095ebc59c8c0aec02ef9037a65130283c6da2bef70cb0078f663e875c5cfe7"
+    },
+    {
+      "trial_id": "missing_logs-owlmatic-2e02a9b7",
+      "arm": "owlmatic",
+      "case": "missing_logs",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 366662,
+        "cached_input_tokens": 332800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2744,
+        "reasoning_output_tokens": 1421
+      },
+      "total_tokens": 369406,
+      "uncached_input_tokens": 33862,
+      "outcome": "inconclusive",
+      "fixture_oracle_accepted": false,
+      "elapsed_seconds": 165.67,
+      "completed_shell_items": 15,
+      "raw_events_sha256": "31aa067d694555e01bc29860fb64165497133771082c8ebbb8fbd6ffb86f6470"
+    },
+    {
+      "trial_id": "healthy-owlmatic-445284ac",
+      "arm": "owlmatic",
+      "case": "healthy",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 513190,
+        "cached_input_tokens": 470272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3148,
+        "reasoning_output_tokens": 1623
+      },
+      "total_tokens": 516338,
+      "uncached_input_tokens": 42918,
+      "outcome": "pass",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 149.23,
+      "completed_shell_items": 14,
+      "raw_events_sha256": "e3f001886453179a390f3c5ddac6162f25bd3af9f4d72dd7fa2ee52929480e58"
+    },
+    {
+      "trial_id": "healthy-direct-924cedc3",
+      "arm": "direct",
+      "case": "healthy",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 97657,
+        "cached_input_tokens": 77568,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 405,
+        "reasoning_output_tokens": 0
+      },
+      "total_tokens": 98062,
+      "uncached_input_tokens": 20089,
+      "outcome": "pass",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 75.06,
+      "completed_shell_items": 3,
+      "raw_events_sha256": "021aa088e3ea3d7fb10853bf671e2f556ac9a24f048b1759da7616ca249169f8"
+    },
+    {
+      "trial_id": "healthy-manual-ede6e0cb",
+      "arm": "manual",
+      "case": "healthy",
+      "variant": "initial",
+      "provider_usage": {
+        "input_tokens": 160160,
+        "cached_input_tokens": 134144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3339,
+        "reasoning_output_tokens": 508
+      },
+      "total_tokens": 163499,
+      "uncached_input_tokens": 26016,
+      "outcome": "pass",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 133.44,
+      "completed_shell_items": 5,
+      "raw_events_sha256": "4c739a1e27de75d7ca985b537667c0638ef57679f9537ebf2a81ca4581968cb2"
+    },
+    {
+      "trial_id": "healthy-owlmatic-2005349a",
+      "arm": "owlmatic",
+      "case": "healthy",
+      "variant": "runtime_setup_failure",
+      "provider_usage": {
+        "input_tokens": 65785,
+        "cached_input_tokens": 46336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 554,
+        "reasoning_output_tokens": 77
+      },
+      "total_tokens": 66339,
+      "uncached_input_tokens": 19449,
+      "outcome": "inconclusive",
+      "fixture_oracle_accepted": false,
+      "elapsed_seconds": 23.46,
+      "completed_shell_items": 3,
+      "raw_events_sha256": "8b266061632bc22eb33a0562925c73dfeccd46cfdfa1465071009d88b84cc9c3"
+    },
+    {
+      "trial_id": "healthy-owlmatic-ce382d4a",
+      "arm": "owlmatic",
+      "case": "healthy",
+      "variant": "revised",
+      "provider_usage": {
+        "input_tokens": 102866,
+        "cached_input_tokens": 96768,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 606,
+        "reasoning_output_tokens": 0
+      },
+      "total_tokens": 103472,
+      "uncached_input_tokens": 6098,
+      "outcome": "pass",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 76.39,
+      "completed_shell_items": 5,
+      "raw_events_sha256": "04f3008954d3a4bc50715246a06f54463701db6a71509dcd7f84af92abbf8a4d"
+    },
+    {
+      "trial_id": "missing_logs-owlmatic-0c8576a9",
+      "arm": "owlmatic",
+      "case": "missing_logs",
+      "variant": "revised",
+      "provider_usage": {
+        "input_tokens": 120782,
+        "cached_input_tokens": 112896,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 699,
+        "reasoning_output_tokens": 0
+      },
+      "total_tokens": 121481,
+      "uncached_input_tokens": 7886,
+      "outcome": "inconclusive",
+      "fixture_oracle_accepted": true,
+      "elapsed_seconds": 85.8,
+      "completed_shell_items": 6,
+      "raw_events_sha256": "adc68bd6ae46ed42a792dadb14a2ecd96c85a1e27b704d67ca71fb56b4ba563c"
+    }
+  ]
+}

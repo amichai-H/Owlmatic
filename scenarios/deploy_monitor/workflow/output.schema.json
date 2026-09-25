@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "outcome": {
+      "enum": [
+        "pass",
+        "fail",
+        "inconclusive"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "deployment_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Deployment Id"
+    },
+    "observed_seconds": {
+      "title": "Observed Seconds",
+      "type": "number"
+    },
+    "events_checked": {
+      "title": "Events Checked",
+      "type": "integer"
+    },
+    "effects": {
+      "enum": [
+        "completed",
+        "unknown"
+      ],
+      "title": "Effects",
+      "type": "string"
+    }
+  },
+  "required": [
+    "outcome",
+    "reason",
+    "deployment_id",
+    "observed_seconds",
+    "events_checked",
+    "effects"
+  ],
+  "title": "Result",
+  "type": "object"
+}
